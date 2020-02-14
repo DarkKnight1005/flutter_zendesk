@@ -49,7 +49,7 @@ public class SwiftFlutterZenDeskPlugin: NSObject, FlutterPlugin {
             
             let hcConfig = HelpCenterUiConfiguration()
             hcConfig.groupType = .section
-            hcConfig.groupIds = [1234, 5678]
+            //hcConfig.groupIds = [1234, 5678]
             let helpCenter = HelpCenterUi.buildHelpCenterOverviewUi(withConfigs: [hcConfig])
                         
             let rootViewController:UIViewController! = UIApplication.shared.keyWindow?.rootViewController
