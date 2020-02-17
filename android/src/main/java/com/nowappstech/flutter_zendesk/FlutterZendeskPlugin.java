@@ -17,6 +17,7 @@ import zendesk.core.Zendesk;
 import zendesk.support.Support;
 import zendesk.support.guide.HelpCenterActivity;
 import zendesk.support.request.RequestActivity;
+import zendesk.support.requestlist.RequestListActivity;
 
 public class FlutterZendeskPlugin implements MethodCallHandler {
 
@@ -30,25 +31,35 @@ public class FlutterZendeskPlugin implements MethodCallHandler {
 
     @Override
     public void onMethodCall(MethodCall call, @NonNull Result result) {
-        if (call.method.equals("initiate")) {
-            String url = call.argument("url");
-            String appId = call.argument("appId");
-            String clientId = call.argument("clientId");
-            Zendesk.INSTANCE.init(mRegistrar.context(), url,
-                    appId,
-                    clientId);
-            List<Long> list = new ArrayList<>();
-            list.add(0, 1234L);
-            list.add(0, 5678L);
-            Identity identity = new AnonymousIdentity();
-            Zendesk.INSTANCE.setIdentity(identity);
-            Support.INSTANCE.init(Zendesk.INSTANCE);
-            HelpCenterActivity.builder()
-                    //.withArticlesForSectionIds(list)
-                    .show(mRegistrar.activity());
-            result.success("Zendesk Initialized");
-        } else {
-            result.notImplemented();
+
+        switch(call.method)
+        {
+            case "initiate":
+                String url = call.argument("url");
+                String appId = call.argument("appId");
+                String clientId = call.argument("clientId");
+                Zendesk.INSTANCE.init(mRegistrar.context(), url,
+                        appId,
+                        clientId);
+                Identity identity = new AnonymousIdentity();
+                Zendesk.INSTANCE.setIdentity(identity);
+                Support.INSTANCE.init(Zendesk.INSTANCE);
+                result.success("Zendesk Initialized");
+                break;
+            case "help":
+                HelpCenterActivity.builder()
+                        .withContactUsButtonVisible(false)
+                        .withShowConversationsMenuButton(false)
+                        .show(mRegistrar.activity());
+                result.success("Zendesk Help Center Initialized");
+                break;
+            case "feedback":
+                RequestListActivity.builder()
+                        .show(mRegistrar.activity());
+                result.success("Zendesk Request Center Initialized");
+                break;
+            default:
+                result.notImplemented();
         }
     }
 }
