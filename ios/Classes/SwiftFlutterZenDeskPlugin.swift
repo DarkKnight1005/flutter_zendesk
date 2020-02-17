@@ -30,40 +30,56 @@ public class SwiftFlutterZenDeskPlugin: NSObject, FlutterPlugin {
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         self.flutterResult = result
-        
-        if(call.method.elementsEqual("initiate")){
-            
+
+        switch call.method {
+        case "initiate":
             let args = call.arguments as? NSDictionary
-            
+
             let appId = args!["appId"]as? String
             let clientId  = args!["clientId"]as? String
             let url = args!["url"]as? String
-            
+
             Zendesk.initialize(appId: appId!,
                                clientId: clientId!,
                                zendeskUrl: url!)
             Support.initialize(withZendesk: Zendesk.instance)
-            
+
             let ident = Identity.createAnonymous()
             Zendesk.instance?.setIdentity(ident)
-            
-            let hcConfig = HelpCenterUiConfiguration()
-            hcConfig.groupType = .section
-            //hcConfig.groupIds = [1234, 5678]
-            let helpCenter = HelpCenterUi.buildHelpCenterOverviewUi(withConfigs: [hcConfig])
-                        
-            let rootViewController:UIViewController! = UIApplication.shared.keyWindow?.rootViewController
-                  if (rootViewController is UINavigationController) {
-                      (rootViewController as! UINavigationController).pushViewController(helpCenter, animated:true)
-                  } else {
-                      let navigationController:UINavigationController! = UINavigationController(rootViewController:helpCenter)
-                    rootViewController.present(navigationController, animated:true, completion:nil)
-                  }
-
             result(nil)
 
-        }else{
+        case "help":
+            let hcConfig = HelpCenterUiConfiguration()
+            hcConfig.hideContactSupport = true
+
+            let articleUiConfig = ArticleUiConfiguration()
+            articleUiConfig.showContactOptions = false   // hide in article screen
+
+            let helpCenter = HelpCenterUi.buildHelpCenterOverviewUi(withConfigs: [hcConfig, articleUiConfig])
+
+            let rootViewController:UIViewController! = UIApplication.shared.keyWindow?.rootViewController
+              if (rootViewController is UINavigationController) {
+                  (rootViewController as! UINavigationController).pushViewController(helpCenter, animated:true)
+              } else {
+                  let navigationController:UINavigationController! = UINavigationController(rootViewController:helpCenter)
+                rootViewController.present(navigationController, animated:true, completion:nil)
+              }
+             result(nil)
+
+        case "feedback":
+           let feedback = RequestUi.buildRequestList()
+           let rootViewController:UIViewController! = UIApplication.shared.keyWindow?.rootViewController
+             if (rootViewController is UINavigationController) {
+                 (rootViewController as! UINavigationController).pushViewController(feedback, animated:true)
+             } else {
+                 let navigationController:UINavigationController! = UINavigationController(rootViewController:feedback)
+               rootViewController.present(navigationController, animated:true, completion:nil)
+             }
+           result(nil)
+
+        default:
             flutterResult!(FlutterMethodNotImplemented)
         }
+
     }
 }
