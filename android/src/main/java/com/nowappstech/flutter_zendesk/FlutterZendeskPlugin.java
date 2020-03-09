@@ -18,6 +18,8 @@ import zendesk.support.Support;
 import zendesk.support.guide.HelpCenterActivity;
 import zendesk.support.request.RequestActivity;
 import zendesk.support.requestlist.RequestListActivity;
+import zendesk.core.JwtIdentity;
+import com.zendesk.logger.Logger;
 
 public class FlutterZendeskPlugin implements MethodCallHandler {
 
@@ -35,13 +37,18 @@ public class FlutterZendeskPlugin implements MethodCallHandler {
         switch(call.method)
         {
             case "initiate":
+               // Logger.setLoggable(true);
+
                 String url = call.argument("url");
                 String appId = call.argument("appId");
                 String clientId = call.argument("clientId");
+                String token = call.argument("token");
+
                 Zendesk.INSTANCE.init(mRegistrar.context(), url,
                         appId,
                         clientId);
-                Identity identity = new AnonymousIdentity();
+
+                Identity identity = new JwtIdentity(token);
                 Zendesk.INSTANCE.setIdentity(identity);
                 Support.INSTANCE.init(Zendesk.INSTANCE);
                 result.success("Zendesk Initialized");

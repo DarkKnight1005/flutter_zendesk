@@ -33,18 +33,21 @@ public class SwiftFlutterZenDeskPlugin: NSObject, FlutterPlugin {
 
         switch call.method {
         case "initiate":
+           // CoreLogger.enabled = true
+           // CoreLogger.logLevel = .debug
             let args = call.arguments as? NSDictionary
 
             let appId = args!["appId"]as? String
             let clientId  = args!["clientId"]as? String
             let url = args!["url"]as? String
+            let token = args!["token"]as? String
 
             Zendesk.initialize(appId: appId!,
                                clientId: clientId!,
                                zendeskUrl: url!)
             Support.initialize(withZendesk: Zendesk.instance)
 
-            let ident = Identity.createAnonymous()
+            let ident = Identity.createJwt(token: token ?? "")
             Zendesk.instance?.setIdentity(ident)
             result(nil)
 
