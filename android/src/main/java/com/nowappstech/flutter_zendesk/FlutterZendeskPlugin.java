@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.util.Log;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -37,7 +38,7 @@ public class FlutterZendeskPlugin implements MethodCallHandler {
         switch(call.method)
         {
             case "initiate":
-               // Logger.setLoggable(true);
+                Logger.setLoggable(true);
 
                 String url = call.argument("url");
                 String appId = call.argument("appId");
@@ -47,6 +48,8 @@ public class FlutterZendeskPlugin implements MethodCallHandler {
                 Zendesk.INSTANCE.init(mRegistrar.context(), url,
                         appId,
                         clientId);
+
+                Log.d("Zendesk","got token " + token);
 
                 Identity identity = new JwtIdentity(token);
                 Zendesk.INSTANCE.setIdentity(identity);
