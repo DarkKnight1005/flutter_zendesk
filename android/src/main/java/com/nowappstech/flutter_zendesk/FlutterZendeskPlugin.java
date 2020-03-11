@@ -37,7 +37,7 @@ public class FlutterZendeskPlugin implements MethodCallHandler {
         switch(call.method)
         {
             case "initiate":
-                Logger.setLoggable(true);
+                //Logger.setLoggable(true);
 
                 String url = call.argument("url");
                 String appId = call.argument("appId");
@@ -48,7 +48,7 @@ public class FlutterZendeskPlugin implements MethodCallHandler {
                         appId,
                         clientId);
 
-                Log.d("Zendesk","got token " + token);
+                //Log.d("Zendesk","got token " + token);
 
                 Identity identity = new JwtIdentity(token);
                 Zendesk.INSTANCE.setIdentity(identity);
