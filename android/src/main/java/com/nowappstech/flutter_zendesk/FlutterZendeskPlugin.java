@@ -77,7 +77,7 @@ public class FlutterZendeskPlugin implements MethodCallHandler {
                 });
                 result.success("Zendesk Notifications Initialized");
                 break;
-            case "openTiket":
+            case "openTicket":
                 String ticketId = call.argument("ticketId");
                 Log.d("Zendesk","got ticketId " + ticketId);
 

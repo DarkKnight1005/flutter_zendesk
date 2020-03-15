@@ -65,8 +65,8 @@ public class SwiftFlutterZenDeskPlugin: NSObject, FlutterPlugin {
         case "openTicket" :
            let args = call.arguments as? NSDictionary
            let requestID = args!["ticketId"]as? String
-           print("Zendesk call openTicket ",  terminator: "")
-           print(requestID! as String)
+           //print("Zendesk call openTicket ",  terminator: "")
+           //print(requestID! as String)
 
            let viewController = RequestUi.buildRequestUi(requestId: requestID ?? "")
 
