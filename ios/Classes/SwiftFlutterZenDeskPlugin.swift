@@ -51,6 +51,34 @@ public class SwiftFlutterZenDeskPlugin: NSObject, FlutterPlugin {
             Zendesk.instance?.setIdentity(ident)
             result(nil)
 
+        case "initNotifications" :
+            let args = call.arguments as? NSDictionary
+            let fcmToken = args!["fcmToken"]as? String
+            ZDKPushProvider(zendesk: Zendesk.instance!).register(deviceIdentifier: fcmToken ?? "", locale: NSLocale.preferredLanguages.first ?? "en") { (pushResponse, error) in
+                    if (error != nil){
+                    print("Couldn't register device: \(fcmToken ?? ""). Error: \(String(describing: error))")
+                } else {
+                    print("Successfully registered device: \(fcmToken ?? "")")
+                 }
+            }
+            result(nil)
+        case "openTicket" :
+           let args = call.arguments as? NSDictionary
+           let requestID = args!["ticketId"]as? String
+           print("Zendesk call openTicket ",  terminator: "")
+           print(requestID! as String)
+
+           let viewController = RequestUi.buildRequestUi(requestId: requestID ?? "")
+
+           let rootViewController:UIViewController! = UIApplication.shared.keyWindow?.rootViewController
+             if (rootViewController is UINavigationController) {
+                 (rootViewController as! UINavigationController).pushViewController(viewController, animated:true)
+             } else {
+                 let navigationController:UINavigationController! = UINavigationController(rootViewController:viewController)
+               rootViewController.present(navigationController, animated:true, completion:nil)
+             }
+           result(nil)
+
         case "help":
             let hcConfig = HelpCenterUiConfiguration()
             hcConfig.hideContactSupport = true
