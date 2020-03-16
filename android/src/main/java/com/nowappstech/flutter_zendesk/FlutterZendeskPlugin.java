@@ -41,7 +41,7 @@ public class FlutterZendeskPlugin implements MethodCallHandler {
         switch(call.method)
         {
             case "initiate":
-                Logger.setLoggable(true);
+                //Logger.setLoggable(true);
 
                 String url = call.argument("url");
                 String appId = call.argument("appId");
