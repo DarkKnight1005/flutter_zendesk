@@ -28,11 +28,9 @@ class _HomeState extends State<Home> {
       "url": "YOUR_URL",
     };
     try {
-      String result =
-          await FlutterZendesk.initiateZendesk(params: Map.from(param));
-      if (result != null) {
-        print("Platform Result $result");
-      }
+      String result = await FlutterZendesk.initiateZendesk(params: Map.from(param));
+
+      print("Platform Result $result");
     } on PlatformException {
       print('Failed to initiate zendesk.');
     }
